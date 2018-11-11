@@ -1,0 +1,8 @@
+.coinSymbol {
+  display: flex;
+  align-content: center;
+}
+
+.logo-sprite {
+  margin-right: 4px;
+}

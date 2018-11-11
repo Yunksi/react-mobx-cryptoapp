@@ -6,12 +6,17 @@ import * as serviceWorker from './serviceWorker';
 import cryptoStore from './stores/CryptoStore';
 import { Provider } from 'mobx-react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
+
+window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 ReactDOM.render(
   <Provider cryptoStore={cryptoStore}>
-    <Router>
-      <App />
-    </Router>
+    <IntlProvider locale="en">
+      <Router>
+        <App />
+      </Router>
+    </IntlProvider>
   </Provider>,
   document.getElementById('root')
 );

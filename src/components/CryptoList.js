@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { inject, observer } from 'mobx-react';
 import {
   Table,
   TableHead,
   TableCell,
   TableBody,
-  TableRow
+  TableRow,
+  CircularProgress
 } from '@material-ui/core';
 import CryptoItem from './CryptoItem';
+import './CryptoList.css';
 
 export class CryptoList extends Component {
   componentDidMount = () => {
@@ -15,23 +17,31 @@ export class CryptoList extends Component {
   };
 
   render() {
-    const { coins } = this.props.cryptoStore;
+    const { coins, isLoadingCoins } = this.props.cryptoStore;
     return (
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Rank</TableCell>
-            <TableCell>Symbol</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Change (24h)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {coins.map(coin => {
-            return <CryptoItem key={coin.id} coin={coin} />;
-          })}
-        </TableBody>
-      </Table>
+      <Fragment>
+        {isLoadingCoins ? (
+          <div className="progress">
+            <CircularProgress />
+          </div>
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Rank</TableCell>
+                <TableCell>Symbol</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>Change (24h)</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {coins.map(coin => {
+                return <CryptoItem key={coin.id} coin={coin} />;
+              })}
+            </TableBody>
+          </Table>
+        )}
+      </Fragment>
     );
   }
 }

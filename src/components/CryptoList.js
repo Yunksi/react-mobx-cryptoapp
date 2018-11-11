@@ -6,7 +6,8 @@ import {
   TableCell,
   TableBody,
   TableRow,
-  CircularProgress
+  CircularProgress,
+  Hidden
 } from '@material-ui/core';
 import CryptoItem from './CryptoItem';
 import './CryptoList.css';
@@ -17,7 +18,7 @@ export class CryptoList extends Component {
   };
 
   render() {
-    const { coins, isLoadingCoins } = this.props.cryptoStore;
+    const { coins, isLoadingCoins, currency } = this.props.cryptoStore;
     return (
       <Fragment>
         {isLoadingCoins ? (
@@ -28,15 +29,22 @@ export class CryptoList extends Component {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Rank</TableCell>
+                <TableCell>#</TableCell>
                 <TableCell>Symbol</TableCell>
                 <TableCell>Price</TableCell>
-                <TableCell>Change (24h)</TableCell>
+                <Hidden xsDown>
+                  <TableCell>Change (24h)</TableCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell>Price Graph</TableCell>
+                </Hidden>
               </TableRow>
             </TableHead>
             <TableBody>
               {coins.map(coin => {
-                return <CryptoItem key={coin.id} coin={coin} />;
+                return (
+                  <CryptoItem key={coin.id} coin={coin} currency={currency} />
+                );
               })}
             </TableBody>
           </Table>

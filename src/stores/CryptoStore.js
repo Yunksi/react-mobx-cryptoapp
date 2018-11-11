@@ -7,8 +7,10 @@ configure({ enforceActions: 'observed' });
 
 class CryptoStore {
   coins = [];
+  isLoadingCoins = true;
 
   fetchCoinData = () => {
+    this.isLoadingCoins = true;
     Axios.get(`${BASE_API_URL}/ticker/`).then(res => {
       runInAction(() => {
         this.setCoins(res.data);
@@ -18,11 +20,13 @@ class CryptoStore {
 
   setCoins = data => {
     this.coins = data;
+    this.isLoadingCoins = false;
   };
 }
 
 decorate(CryptoStore, {
   coins: observable,
+  isLoadingCoins: observable,
   fetchCoinData: action
 });
 

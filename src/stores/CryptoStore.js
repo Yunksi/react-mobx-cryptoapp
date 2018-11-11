@@ -1,4 +1,11 @@
-import { observable, configure, decorate, action, runInAction } from 'mobx';
+import {
+  observable,
+  configure,
+  decorate,
+  action,
+  runInAction,
+  computed
+} from 'mobx';
 import Axios from 'axios';
 
 const BASE_API_URL = 'https://api.coinmarketcap.com/v2';
@@ -10,6 +17,9 @@ class CryptoStore {
   isLoadingCoins = true;
   anchorEl = null;
   currency = 'USD';
+  selectedCoin = null;
+  loadingCoinDetails = true;
+  coinBTCData = null;
 
   fetchCoinData = () => {
     this.isLoadingCoins = true;
@@ -22,9 +32,36 @@ class CryptoStore {
     });
   };
 
+  fetchSingleCoin = coinId => {
+    this.loadingCoinDetails = true;
+    Axios.get(
+      `${BASE_API_URL}/ticker/${coinId}/?convert=${this.currency}`
+    ).then(res => {
+      runInAction(() => {
+        this.setCoin(res.data.data);
+      });
+    });
+  };
+
+  fetchSingleCoinBTCPrice = coinId => {
+    Axios.get(`${BASE_API_URL}/ticker/${coinId}/?convert=BTC`).then(res => {
+      runInAction(() => {
+        this.setCoinBTCdata(res.data.data.quotes.BTC);
+      });
+    });
+  };
+
+  setCoinBTCdata = data => {
+    this.coinBTCData = data;
+  };
+
+  setCoin = data => {
+    this.selectedCoin = data;
+    this.loadingCoinDetails = false;
+  };
+
   setCoins = data => {
     this.coins = data.data;
-    console.log(data.data);
     this.isLoadingCoins = false;
   };
 
@@ -36,21 +73,30 @@ class CryptoStore {
     switch (selectedCurrency) {
       case 'USD':
         this.currency = 'USD';
-        this.fetchCoinData();
         break;
       case 'EUR':
         this.currency = 'EUR';
-        this.fetchCoinData();
         break;
       case 'CNY':
         this.currency = 'CNY';
-        this.fetchCoinData();
         break;
       default:
         break;
     }
     this.anchorEl = null;
+    this.fetchCoinData();
+    if (this.selectedCoin) {
+      this.fetchSingleCoin(this.selectedCoin.id);
+    }
   };
+
+  get percentChangeClass() {
+    if (this.selectedCoin)
+      return this.selectedCoin.quotes[this.currency].percent_change_24h > 0
+        ? 'green'
+        : 'red';
+    return 'red';
+  }
 }
 
 decorate(CryptoStore, {
@@ -59,11 +105,16 @@ decorate(CryptoStore, {
   isMenuOpen: observable,
   anchorEl: observable,
   currency: observable,
+  selectedCoin: observable,
+  loadingCoinDetails: observable,
+  coinBTCData: observable,
   fetchCoinData: action,
   openMenu: action,
-  closeMenu: action
+  closeMenu: action,
+  fetchSingleCoin: action,
+  percentChangeClass: computed
 });
 
-var store = (window.store = new CryptoStore());
+var store = new CryptoStore();
 
 export default store;

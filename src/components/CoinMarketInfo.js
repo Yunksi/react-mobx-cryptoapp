@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { FormattedNumber } from 'react-intl';
+import { PropTypes } from 'prop-types';
 
 export class CoinMarketInfo extends Component {
   render() {
@@ -60,5 +61,10 @@ export class CoinMarketInfo extends Component {
     );
   }
 }
+
+CoinMarketInfo.propTypes = {
+  coin: PropTypes.object.isRequired,
+  currency: PropTypes.string.isRequired
+};
 
 export default CoinMarketInfo;

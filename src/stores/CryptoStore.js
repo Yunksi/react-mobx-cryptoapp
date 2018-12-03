@@ -1,11 +1,4 @@
-import {
-	observable,
-	configure,
-	decorate,
-	action,
-	runInAction,
-	computed
-} from 'mobx';
+import { observable, configure, action, runInAction, computed } from 'mobx';
 import Axios from 'axios';
 
 const BASE_API_URL = 'https://api.coinmarketcap.com/v2';
@@ -13,14 +6,15 @@ const BASE_API_URL = 'https://api.coinmarketcap.com/v2';
 configure({ enforceActions: 'observed' });
 
 class CryptoStore {
-	coins = [];
-	isLoadingCoins = true;
-	anchorEl = null;
-	currency = 'USD';
-	selectedCoin = null;
-	loadingCoinDetails = true;
-	coinBTCData = null;
+	@observable coins = [];
+	@observable isLoadingCoins = true;
+	@observable anchorEl = null;
+	@observable currency = 'USD';
+	@observable selectedCoin = null;
+	@observable loadingCoinDetails = true;
+	@observable coinBTCData = null;
 
+	@action
 	async fetchCoinData() {
 		this.isLoadingCoins = true;
 		const coins = await Axios.get(
@@ -31,6 +25,7 @@ class CryptoStore {
 		});
 	}
 
+	@action
 	async fetchSingleCoin(coinId) {
 		this.loadingCoinDetails = true;
 		var coin = await Axios.get(
@@ -41,6 +36,7 @@ class CryptoStore {
 		});
 	}
 
+	@action
 	async fetchSingleCoinBTCPrice(coinId) {
 		var btcCoin = await Axios.get(
 			`${BASE_API_URL}/ticker/${coinId}/?convert=BTC`
@@ -64,10 +60,12 @@ class CryptoStore {
 		this.isLoadingCoins = false;
 	};
 
+	@action
 	openMenu = e => {
 		this.anchorEl = e;
 	};
 
+	@action
 	closeMenu = selectedCurrency => {
 		switch (selectedCurrency) {
 			case 'USD':
@@ -89,6 +87,7 @@ class CryptoStore {
 		}
 	};
 
+	@computed
 	get percentChangeClass() {
 		if (this.selectedCoin)
 			return this.selectedCoin.quotes[this.currency].percent_change_24h > 0
@@ -97,22 +96,6 @@ class CryptoStore {
 		return 'red';
 	}
 }
-
-decorate(CryptoStore, {
-	coins: observable,
-	isLoadingCoins: observable,
-	isMenuOpen: observable,
-	anchorEl: observable,
-	currency: observable,
-	selectedCoin: observable,
-	loadingCoinDetails: observable,
-	coinBTCData: observable,
-	fetchCoinData: action,
-	openMenu: action,
-	closeMenu: action,
-	fetchSingleCoin: action,
-	percentChangeClass: computed
-});
 
 var store = new CryptoStore();
 

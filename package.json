@@ -32,6 +32,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "custom-react-scripts": "^0.2.2",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0"
   }

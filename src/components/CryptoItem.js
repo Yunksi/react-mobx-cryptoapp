@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TableRow, TableCell, Hidden } from '@material-ui/core';
-// import { withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import './CryptoItem.css';
 
+@withRouter
 class CryptoItem extends Component {
 	goToDetails = () => {
 		this.props.history.push(`/coin/${this.props.coin.id}`);

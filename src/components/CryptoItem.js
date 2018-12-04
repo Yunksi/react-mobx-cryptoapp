@@ -4,8 +4,7 @@ import { TableRow, TableCell, Hidden } from '@material-ui/core';
 import { withRouter } from 'react-router';
 import './CryptoItem.css';
 
-@withRouter
-class CryptoItem extends Component {
+export class CryptoItem extends Component {
 	goToDetails = () => {
 		this.props.history.push(`/coin/${this.props.coin.id}`);
 	};
@@ -72,4 +71,4 @@ CryptoItem.propTypes = {
 	coin: PropTypes.object.isRequired
 };
 
-export default CryptoItem;
+export default withRouter(CryptoItem);

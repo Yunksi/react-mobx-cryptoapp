@@ -12,9 +12,7 @@ import {
 import CryptoItem from './CryptoItem';
 import './CryptoList.css';
 
-@inject('cryptoStore')
-@observer
-class CryptoList extends Component {
+export class CryptoList extends Component {
 	componentDidMount = () => {
 		this.props.cryptoStore.fetchCoinData();
 	};
@@ -56,4 +54,4 @@ class CryptoList extends Component {
 	}
 }
 
-export default CryptoList;
+export default inject('cryptoStore')(observer(CryptoList));

@@ -1,15 +1,12 @@
 import React from 'react';
 import { CryptoList } from './CryptoList';
-import { CryptoItem } from './CryptoItem';
-import { createShallow } from '@material-ui/core/test-utils';
-import { CircularProgress, Table } from '@material-ui/core';
+import { shallow } from 'enzyme';
+import { CircularProgress, TableBody } from '@material-ui/core';
 
 let cryptoStore, wrapper;
 
 describe('<CryptoList />', () => {
-	let shallow;
-
-	beforeEach(() => {
+	it('should render top 100 crypto currencies', () => {
 		cryptoStore = {
 			coins: [
 				{
@@ -2113,20 +2110,24 @@ describe('<CryptoList />', () => {
 					last_updated: 1542563867
 				}
 			],
+			isLoadingCoins: false,
+			currency: 'USD',
+			fetchCoinData: () => {}
+		};
+		wrapper = shallow(<CryptoList cryptoStore={cryptoStore} />);
+		console.log(wrapper.find(TableBody).children());
+		expect(wrapper.find(TableBody).children()).toHaveLength(
+			cryptoStore.coins.length
+		);
+	});
+
+	it('should display loading spinner when loading coins', () => {
+		cryptoStore = {
 			isLoadingCoins: true,
 			currency: 'USD',
 			fetchCoinData: () => {}
 		};
-		shallow = createShallow();
 		wrapper = shallow(<CryptoList cryptoStore={cryptoStore} />);
-	});
-
-	// it('should render top 100 crypto currencies', () => {
-	// 	expect(wrapper.find('.test')).toHaveLength(cryptoStore.coins.length);
-	// 	// expect(wrapper.contains(CryptoItem)).toHaveLength(100);
-	// });
-
-	it('should display loading spinner', () => {
 		expect(wrapper.find(CircularProgress)).toHaveLength(1);
 	});
 });

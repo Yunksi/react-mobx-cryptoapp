@@ -7,9 +7,7 @@ import CoinValueInfo from './CoinValueInfo';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 
-@inject('cryptoStore')
-@observer
-class CryptoDetails extends Component {
+export class CryptoDetails extends Component {
 	componentDidMount = () => {
 		const coinId = this.props.match.params.id;
 		this.props.cryptoStore.fetchSingleCoin(coinId);
@@ -91,4 +89,4 @@ class CryptoDetails extends Component {
 	}
 }
 
-export default CryptoDetails;
+export default inject('cryptoStore')(observer(CryptoDetails));

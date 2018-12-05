@@ -1,3 +1,7 @@
+## Notification
+
+This app was made on CMC API v2 which is going to be deprecated soon. Bear in mind that you may have to change BASE_API_URL and make major changes to make it work.
+
 ## Docker-compose installation
 
 Run `docker-compose up -d --build`. Navigate to `http://localhost:3000/`.
